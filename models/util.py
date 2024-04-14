@@ -25,9 +25,9 @@ def get_train_data(path='../data/train.csv', scaleNumericalFeatures=False):
     X = df.drop(['ID_code', 'target'], axis=1)  
     y = df['target']
     # scale the numerical features
-    if scaleNumericalFeatures:
-        scaler = StandardScaler()
-        X = scaler.fit_transform(X)
+    # if scaleNumericalFeatures:
+    #     scaler = StandardScaler()
+    #     X = scaler.fit_transform(X)
     return X, y
 
 def get_test_data(path='../data/test.csv', scaleNumericalFeatures=False):
@@ -44,7 +44,7 @@ def get_test_data(path='../data/test.csv', scaleNumericalFeatures=False):
 # Feature Importance
 
 
-def getFeatureImportance(features, importance):
+def get_feature_importance(features, importance):
     # Add the feature importances into a dataframe
     feature_importance = pd.DataFrame(
         {'feature': features, 'importance': importance})
@@ -52,7 +52,7 @@ def getFeatureImportance(features, importance):
     return feature_importance
 
 
-def getFeatureImportancePlot(feature_importance, save=True, modelname='model'):
+def get_feature_importance_plot(feature_importance, save=True, modelname='model'):
     # Plot the feature importances
     plt.figure(figsize=(10, 6))
     plt.bar(feature_importance['feature'], feature_importance['importance'])
@@ -63,7 +63,7 @@ def getFeatureImportancePlot(feature_importance, save=True, modelname='model'):
     # increase the spacing between the title and the plot
     plt.subplots_adjust(top=0.9)
     if save:
-        plt.savefig(f'../figures/{modelname}/feature_importance.png', dpi=300, bbox_inches='tight')
+        plt.savefig(f'../images/{modelname}/feature_importance.png', dpi=300, bbox_inches='tight')
     return plt
 
 # Learning Curves
@@ -98,7 +98,7 @@ def getLearningCurvePlot(estimator, X, y, cv=5, scoring='f1_weighted', modelname
 
     plt.legend(loc='best')
     if save:
-        plt.savefig(f'../figures/{modelname}/learning_curve.png', dpi=300, bbox_inches='tight')
+        plt.savefig(f'../images/{modelname}/learning_curve.png', dpi=300, bbox_inches='tight')
     return plt
 
 # Partial Dependence Plot
@@ -116,7 +116,7 @@ def getPartialDependenciesPlot(estimator, X, modelname='model', save=True):
     fig.suptitle(f'Partial Dependence Plots for {modelname}')
     fig.tight_layout()
     if save:
-        plt.savefig(f'../figures/{modelname}/partial_dependencies.png', dpi=300, bbox_inches='tight')
+        plt.savefig(f'../images/{modelname}/partial_dependencies.png', dpi=300, bbox_inches='tight')
     return plt
 
 # Grid Search
@@ -154,7 +154,7 @@ def plotHyperParamHeatMaps(param_grid, grid_search, modelname='model', save=True
     # set title for the figure
     fig.suptitle(f'Hyperparameter Heat Maps for {modelname}')
     if save:
-        plt.savefig(f'../figures/{modelname}/hyper_param_heat_maps.png', dpi=300, bbox_inches='tight')
+        plt.savefig(f'../images/{modelname}/hyper_param_heat_maps.png', dpi=300, bbox_inches='tight')
     return plt
             
 
@@ -187,7 +187,7 @@ def plotHyperParamTrainValidationCurve(estimator, param_grid, X, y, cv=10, scori
         plt.ylabel(scoring)
         plt.title(f'Bias-Variance Tradeoff for {param} using {modelname}')
         if save:
-            plt.savefig(f'../figures/{modelname}/hyper_param_train_val_{param}_{value}.png', dpi=300, bbox_inches='tight')
+            plt.savefig(f'../images/{modelname}/hyper_param_train_val_{param}_{value}.png', dpi=300, bbox_inches='tight')
         plt.show()
 
 
@@ -233,5 +233,5 @@ def getDecisionRegions(estimator, X, f1, f2, y, C=[0.001, 0.1, 10], modelname='m
         axes[i].set_title('C = ' + str(c), size=15)
         plt.colorbar(contours, ticks =[0, 1, 2, 3],format=formatter)
     if save:
-        plt.savefig(f'../figures/{modelname}/decision_regions_for_{modelname}.png', dpi=300, bbox_inches='tight')
+        plt.savefig(f'../images/{modelname}/decision_regions_for_{modelname}.png', dpi=300, bbox_inches='tight')
     return plt
