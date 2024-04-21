@@ -25,9 +25,9 @@ def get_train_data(path='../data/train.csv', scaleNumericalFeatures=False):
     X = df.drop(['ID_code', 'target'], axis=1)  
     y = df['target']
     # scale the numerical features
-    # if scaleNumericalFeatures:
-    #     scaler = StandardScaler()
-    #     X = scaler.fit_transform(X)
+    if scaleNumericalFeatures:
+        scaler = StandardScaler()
+        X = scaler.fit_transform(X)
     return X, y
 
 def get_test_data(path='../data/test.csv', scaleNumericalFeatures=False):
