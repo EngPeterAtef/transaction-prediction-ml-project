@@ -69,7 +69,7 @@ def get_feature_importance_plot(feature_importance, save=True, modelname='model'
 # Learning Curves
 
 
-def getLearningCurvePlot(estimator, X, y, cv=5, scoring='f1_weighted', modelname='model', save=True):
+def get_learning_curve_plot(estimator, X, y, cv=5, scoring='f1_weighted', modelname='model', save=True):
     # It uses cross-validation with cv folds
     train_sizes, train_scores, test_scores = learning_curve(estimator, X, y, cv=cv,
                                                             train_sizes=np.linspace(
