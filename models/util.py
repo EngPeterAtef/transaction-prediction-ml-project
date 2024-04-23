@@ -340,6 +340,9 @@ def plot_hyper_param_train_validation_curve(estimator, param_grid, X, y, cv=10, 
     logitic_type = type(LogisticRegression(random_state=42))
     # iterate over the parameters and get the key and value pairs
     for param, value in param_grid.items():
+        if type(value)==logitic_type or value==None:
+            value = str(value)
+            print(value)
         # Calculate training and validation scores for different values of max_depth
         train_scores, valid_scores = validation_curve(estimator, X, y,
                                                       param_name=param, param_range=value,
@@ -352,9 +355,7 @@ def plot_hyper_param_train_validation_curve(estimator, param_grid, X, y, cv=10, 
         valid_std = np.std(valid_scores, axis=1)
 
         # Plot the bias-variance tradeoff
-        if type(value)==logitic_type or value==None:
-            value = str(value)
-            print(value)
+
         plt.plot(value, train_mean, label='Training score', color='blue')
         plt.fill_between(value, train_mean - train_std,
                          train_mean + train_std, alpha=0.2, color='blue')
