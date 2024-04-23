@@ -8,6 +8,7 @@ from sklearn.inspection import PartialDependenceDisplay#,plot_partial_dependence
 from sklearn.model_selection import (GridSearchCV, learning_curve,
                                      validation_curve)
 from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
 
 sns.set_style(
     style='darkgrid',
@@ -27,10 +28,8 @@ def get_train_data(path='../data/train.csv'):
     Returns:
         tuple: This function returns a tuple of the features and the target variable
     """
-    # read the data
-    # df = pd.read_csv(path)
+    # read first 20000 rows from the data
     df = pd.read_csv(path,nrows=2000)
-
     # drop the id column
     X = df.drop(['ID_code', 'target'], axis=1)  
     y = df['target']
@@ -150,7 +149,6 @@ def get_learning_curve_plot(estimator, X, y, cv=5, scoring='f1_weighted', modeln
     plt.title(f'Learning Curves for {modelname}')
     plt.xlabel('Training Set Size')
     plt.ylabel(f'1 - {scoring}')
-    plt.ylim(0.0, 1.1)
     plt.grid()
 
     plt.fill_between(train_sizes, 1-(train_scores_mean - train_scores_std),
@@ -160,7 +158,9 @@ def get_learning_curve_plot(estimator, X, y, cv=5, scoring='f1_weighted', modeln
 
     plt.plot(train_sizes, 1-train_scores_mean, 'o-', color='r', label='Ein')
     plt.plot(train_sizes, 1-test_scores_mean, 'o-', color='g', label='Eval')
-
+    max_val = np.mean(1-(test_scores_mean + test_scores_std))+ np.mean(1-(train_scores_mean + train_scores_std))
+    
+    plt.ylim(0.0, max_val*2)
     plt.legend(loc='best')
     if save:
         plt.savefig(f'../images/{modelname}/learning_curve.png', dpi=300, bbox_inches='tight')
@@ -254,7 +254,7 @@ def get_partial_dependencies_plot(estimator, X, modelname='model', save=True):
 
     fig.suptitle(f'Partial Dependence Plots for {modelname}')
     # title at the top of the image
-    fig.tight_layout(h_pad=2,w_pad=2)
+    fig.tight_layout(h_pad=0,w_pad=0)
     if save:
         plt.savefig(f'../images/{modelname}/partial_dependencies.png', dpi=300, bbox_inches='tight')
     return plt
@@ -337,8 +337,15 @@ def plot_hyper_param_train_validation_curve(estimator, param_grid, X, y, cv=10, 
         modelname (str, optional): The model name. Defaults to 'model'.
         save (bool, optional): Flag to save the plot or not. Defaults to True.
     """
+    logitic_type = type(LogisticRegression(random_state=42))
     # iterate over the parameters and get the key and value pairs
     for param, value in param_grid.items():
+        # if the value type is list loop over it and convert the type to string
+        if type(value) == list:
+            for i in range(len(value)):
+                if type(value[i]) == logitic_type or value[i]==None:
+                    value[i] = str(value[i])
+        print("Value", value)
         # Calculate training and validation scores for different values of max_depth
         train_scores, valid_scores = validation_curve(estimator, X, y,
                                                       param_name=param, param_range=value,
@@ -351,6 +358,7 @@ def plot_hyper_param_train_validation_curve(estimator, param_grid, X, y, cv=10, 
         valid_std = np.std(valid_scores, axis=1)
 
         # Plot the bias-variance tradeoff
+
         plt.plot(value, train_mean, label='Training score', color='blue')
         plt.fill_between(value, train_mean - train_std,
                          train_mean + train_std, alpha=0.2, color='blue')
