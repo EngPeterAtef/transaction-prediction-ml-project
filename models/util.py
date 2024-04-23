@@ -28,7 +28,9 @@ def get_train_data(path='../data/train.csv'):
         tuple: This function returns a tuple of the features and the target variable
     """
     # read the data
-    df = pd.read_csv(path)
+    # df = pd.read_csv(path)
+    df = pd.read_csv(path,nrows=2000)
+
     # drop the id column
     X = df.drop(['ID_code', 'target'], axis=1)  
     y = df['target']
