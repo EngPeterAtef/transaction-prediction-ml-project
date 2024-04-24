@@ -18,7 +18,7 @@ sns.set_palette(palette='deep')
 sns_c = sns.color_palette(palette='deep')
 ###############################################
 
-
+TRAINING_SIZE = 2000
 def get_train_data(path='../data/train.csv'):
     """This function reads the data from the path and returns the features and the target variable
 
@@ -29,31 +29,27 @@ def get_train_data(path='../data/train.csv'):
         tuple: This function returns a tuple of the features and the target variable
     """
     # read first 20000 rows from the data
-    df = pd.read_csv(path,nrows=2000)
+    df = pd.read_csv(path,nrows=TRAINING_SIZE)
     # drop the id column
     X = df.drop(['ID_code', 'target'], axis=1)  
     y = df['target']
     return X, y
 
-def get_test_data(path='../data/test.csv', scaleNumericalFeatures=False):
+def get_test_data(path='../data/train.csv'):
     """This function reads the data from the path and returns the features and the target variable
 
     Args:
         path (str, optional): The path of the testing . Defaults to '../data/test.csv'.
-        scaleNumericalFeatures (bool, optional): _description_. Defaults to False.
-
     Returns:
-        _type_: _description_
+        tuple: This function returns a tuple of the features and the target variable
     """
-    # read the data
+    # skip the first TRAINING_SIZE rows and raed the rest
     df = pd.read_csv(path)
+    df = df[2000:]
     # drop the id column
-    X = df.drop(['ID_code'], axis=1)  
-    # scale the numerical features
-    if scaleNumericalFeatures:
-        scaler = StandardScaler()
-        X = scaler.fit_transform(X)
-    return X
+    X = df.drop(['ID_code', 'target'], axis=1)  
+    y = df['target']
+    return X, y
 
 # Feature Importance
 
