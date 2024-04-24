@@ -337,10 +337,10 @@ def plot_hyper_param_train_validation_curve(estimator, param_grid, X, y, cv=10, 
     # iterate over the parameters and get the key and value pairs
     for param, value in param_grid.items():
         # if the value type is list loop over it and convert the type to string
-        if type(value) == list:
-            for i in range(len(value)):
-                if type(value[i]) == logitic_type or value[i]==None:
-                    value[i] = str(value[i])
+        # if type(value) == list:
+        #     for i in range(len(value)):
+        #         if type(value[i]) == logitic_type or value[i]==None:
+        #             value[i] = str(value[i])
         print("Value", value)
         # Calculate training and validation scores for different values of max_depth
         train_scores, valid_scores = validation_curve(estimator, X, y,
