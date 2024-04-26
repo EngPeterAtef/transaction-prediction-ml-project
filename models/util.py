@@ -31,7 +31,8 @@ def get_train_data(path='../data/train.csv',training_size = TRAINING_SIZE):
     # read first 20000 rows from the data
     df = pd.read_csv(path,nrows=training_size)
     # drop the id column
-    X = df.drop(['ID_code', 'target'], axis=1)  
+    # X = df.drop(['ID_code', 'target'], axis=1)  
+    X = df.drop(['target'], axis=1)  
     y = df['target']
     return X, y
 
@@ -47,7 +48,8 @@ def get_test_data(path='../data/train.csv',test_size=2000000-TRAINING_SIZE):
     df = pd.read_csv(path)
     df = df[test_size:]
     # drop the id column
-    X = df.drop(['ID_code', 'target'], axis=1)  
+    # X = df.drop(['ID_code', 'target'], axis=1)  
+    X = df.drop(['target'], axis=1)  
     y = df['target']
     return X, y
 
