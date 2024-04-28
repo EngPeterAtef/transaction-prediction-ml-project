@@ -4,11 +4,9 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from mlxtend.evaluate import bias_variance_decomp  # pip install mlxtend
-from sklearn.inspection import PartialDependenceDisplay#,plot_partial_dependence
+from sklearn.inspection import PartialDependenceDisplay
 from sklearn.model_selection import (GridSearchCV, learning_curve,
                                      validation_curve)
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
 
 sns.set_style(
     style='darkgrid',
@@ -119,7 +117,7 @@ def get_learning_curve_plot(estimator, X, y, cv=5, scoring='f1_weighted', modeln
     """This function plots the learning curve
 
     Args:
-        estimator (the return fo fit): This is the model after training
+        estimator (the return of fit): This is the model after training
         X (DataFrame): This is the features of the dataset
         modelname (str, optional): The model name. Defaults to 'model'.
         y (_type_): _description_
@@ -167,7 +165,7 @@ def get_partial_dependencies_plot(estimator, X, modelname='model', save=True):
     """This function plots the partial dependencies
 
     Args:
-        estimator (the return fo fit): This is the model after training
+        estimator (the return of fit): This is the model after training
         X (DataFrame): This is the features of the dataset
         modelname (str, optional): The model name. Defaults to 'model'.
         save (bool, optional): Flag to save the plot or not. Defaults to True.
@@ -210,7 +208,7 @@ def get_grid_search(estimator, param_grid, X, y, scoring, cv=10):
     """This function performs grid search
 
     Args:
-        estimator (the return fo fit): This is the model after training
+        estimator (the return of fit): This is the model after training
         param_grid (dict): This is the hyperparameters grid
         X (DataFrame): This is the features of the dataset
         y (DataFrame): This is the target variable
@@ -272,7 +270,7 @@ def plot_hyper_param_train_validation_curve(estimator, param_grid, X, y, cv=10, 
     """This function plots the hyperparameter train-validation curve
 
     Args:
-        estimator (the return fo fit): This is the model after training
+        estimator (the return of fit): This is the model after training
         param_grid (dict): This is the hyperparameters grid
         X (DataFrame): This is the features of the dataset
         y (DataFrame): This is the target variable
@@ -281,20 +279,12 @@ def plot_hyper_param_train_validation_curve(estimator, param_grid, X, y, cv=10, 
         modelname (str, optional): The model name. Defaults to 'model'.
         save (bool, optional): Flag to save the plot or not. Defaults to True.
     """
-    logitic_type = type(LogisticRegression(random_state=42))
     # iterate over the parameters and get the key and value pairs
     for param, value in param_grid.items():
-        # if the value type is list loop over it and convert the type to string
-        # if type(value) == list:
-        #     for i in range(len(value)):
-        #         if type(value[i]) == logitic_type or value[i]==None:
-        #             value[i] = str(value[i])
-        print("Value", value)
         # Calculate training and validation scores for different values of max_depth
         train_scores, valid_scores = validation_curve(estimator, X, y,
                                                       param_name=param, param_range=value,
                                                       cv=cv, scoring=scoring)
-
         # Calculate the mean and standard deviation of the training and validation scores
         train_mean = np.mean(train_scores, axis=1)
         train_std = np.std(train_scores, axis=1)
@@ -323,7 +313,7 @@ def get_bias_variance(estimator, X_train, y_train, X_test, y_test):
     """This function performs the bias-variance analysis
 
     Args:
-        estimator (the return fo fit): This is the model after training
+        estimator (the return of fit): This is the model after training
         X (DataFrame): This is the features of the training dataset
         y (DataFrame): This is the target variable of the training dataset
         X_test (DataFrame): This is the features of the testing dataset
