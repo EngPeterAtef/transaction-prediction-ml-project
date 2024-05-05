@@ -16,7 +16,8 @@ sns.set_palette(palette='deep')
 sns_c = sns.color_palette(palette='deep')
 ###############################################
 
-TRAINING_SIZE = 2000
+TRAINING_SIZE = 150_000
+TOTAL = 359804
 def get_train_data(path='../data/train.csv',training_size = TRAINING_SIZE):
     """This function reads the data from the path and returns the features and the target variable
 
@@ -26,14 +27,14 @@ def get_train_data(path='../data/train.csv',training_size = TRAINING_SIZE):
     Returns:
         tuple: This function returns a tuple of the features and the target variable
     """
-    # read first 20000 rows from the data
+    # read first training_size rows from the data
     df = pd.read_csv(path,nrows=training_size)
     # drop the id column
     X = df.drop(['target'], axis=1)  
     y = df['target']
     return X, y
 
-def get_test_data(path='../data/train.csv',test_size=2000000-TRAINING_SIZE):
+def get_test_data(path='../data/train.csv',test_start_index= TRAINING_SIZE):
     """This function reads the data from the path and returns the features and the target variable
 
     Args:
@@ -41,9 +42,8 @@ def get_test_data(path='../data/train.csv',test_size=2000000-TRAINING_SIZE):
     Returns:
         tuple: This function returns a tuple of the features and the target variable
     """
-    # skip the first TRAINING_SIZE rows and raed the rest
     df = pd.read_csv(path)
-    df = df[test_size:]
+    df = df[test_start_index:]
     # drop the id column
     X = df.drop(['target'], axis=1)  
     y = df['target']
