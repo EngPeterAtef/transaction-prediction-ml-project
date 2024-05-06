@@ -34,7 +34,7 @@ def get_data(path='../data/train.csv',training_size = None):
     X = df.drop(['target'], axis=1)  
     y = df['target']
     # random indeces for train data
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=training_size, random_state=42,shuffle=True,stratify=y)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=training_size, random_state=100,shuffle=True,stratify=y)
     return X_train, X_test, y_train, y_test
 
 # Feature Importance
