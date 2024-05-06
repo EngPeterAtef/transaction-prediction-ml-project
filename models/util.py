@@ -38,7 +38,6 @@ def get_data(path='../data/train.csv',training_size = None):
     return X_train, X_test, y_train, y_test
 
 # Feature Importance
-
 def standardize_features(X: pd.DataFrame)->pd.DataFrame:
     """This function standardizes the features of the dataset
 
