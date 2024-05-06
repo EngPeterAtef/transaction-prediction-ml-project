@@ -6,7 +6,7 @@ import seaborn as sns
 from mlxtend.evaluate import bias_variance_decomp  # pip install mlxtend
 from sklearn.inspection import PartialDependenceDisplay
 from sklearn.model_selection import (GridSearchCV, learning_curve,
-                                     validation_curve)
+                                     validation_curve,train_test_split)
 
 sns.set_style(
     style='darkgrid',
@@ -15,39 +15,27 @@ sns.set_style(
 sns.set_palette(palette='deep')
 sns_c = sns.color_palette(palette='deep')
 ###############################################
-
-TRAINING_SIZE = 150_000
-TOTAL = 359804
-def get_train_data(path='../data/train.csv',training_size = TRAINING_SIZE):
+# TOTAL = 359804 #oversampling
+# TOTAL = 40196 #undersampling
+def get_data(path='../data/train.csv',training_size = None):
     """This function reads the data from the path and returns the features and the target variable
 
     Args:
         path (str, optional): This the path of the training dataset. Defaults to '../data/train.csv'.
-
+        training_size (float, optional): The percentage of the training data. Defaults to None. if None it will be calculated like the following: 0.7 if len(df) <= 100_000 else 0.5
     Returns:
         tuple: This function returns a tuple of the features and the target variable
     """
     # read first training_size rows from the data
-    df = pd.read_csv(path,nrows=training_size)
-    # drop the id column
-    X = df.drop(['target'], axis=1)  
-    y = df['target']
-    return X, y
-
-def get_test_data(path='../data/train.csv',test_start_index= TRAINING_SIZE):
-    """This function reads the data from the path and returns the features and the target variable
-
-    Args:
-        path (str, optional): The path of the testing . Defaults to '../data/test.csv'.
-    Returns:
-        tuple: This function returns a tuple of the features and the target variable
-    """
     df = pd.read_csv(path)
-    df = df[test_start_index:]
+    if training_size==None:
+        training_size = 0.7 if len(df) <= 100_000 else 0.5
     # drop the id column
     X = df.drop(['target'], axis=1)  
     y = df['target']
-    return X, y
+    # random indeces for train data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=training_size, random_state=42,shuffle=True,stratify=y)
+    return X_train, X_test, y_train, y_test
 
 # Feature Importance
 
@@ -63,10 +51,10 @@ def standardize_features(X: pd.DataFrame)->pd.DataFrame:
     mean_values = X.mean(axis=0)
     std_values = X.std(axis=0)
     X = (X - mean_values) / std_values
-    mean_values = X.mean(axis=0)
-    std_values = X.std(axis=0)
-    print("Mean values of each feature: \n", mean_values)
-    print("Std values of each feature: \n", std_values)
+    # mean_values = X.mean(axis=0)
+    # std_values = X.std(axis=0)
+    # print("Mean values of each feature: \n", mean_values)
+    # print("Std values of each feature: \n", std_values)
     return X
 
 def get_feature_importance(features, importance):
